@@ -3226,7 +3226,7 @@ macro SHLsetShiftLeftFlags(val,shift,result,sze) {
     SHLsetShiftLeftFlags(val, shift, tmp, 32);
 }
 
-### SMOVB ###
+### SMOVB ###  Updated to improve decompilation.
 
 :SMOVB.B                            is b1_0107=0x3e & b1_size_0=0; b2_0007=0xe9 {
 	local dest_addr:3 = zext(A1);
@@ -3298,24 +3298,30 @@ macro SHLsetShiftLeftFlags(val,shift,result,sze) {
 	A0 = src_addr:2;
 }
 
-### SSTR ###
+### SSTR ###  Updated to improve decompilation.
 
 :SSTR.B                             is b1_0107=0x3e & b1_size_0=0; b2_0007=0xea {
-    if (R3 == 0) goto inst_next;
-    ptr1:3 = zext(A1);
-    *:1 ptr1 = R0L;
-    A1 = A1 + 1;
+    local dest_addr:3 = zext(A1);
+    <loopstart>
+    if (R3 == 0) goto <end>;
+    *:1 dest_addr = R0L;
+    dest_addr = dest_addr + 1;
     R3 = R3 - 1;
-    goto inst_start;
+    goto <loopstart>;
+    <end>
+    A1 = dest_addr:2;
 }
 
 :SSTR.W                             is b1_0107=0x3e & b1_size_0=1; b2_0007=0xea {
-    if (R3 == 0) goto inst_next;
-    ptr1:3 = zext(A1);
-    *:2 ptr1 = R0;
-    A1 = A1 + 2;
+    local dest_addr:3 = zext(A1);
+    <loopstart>
+    if (R3 == 0) goto <end>;
+    *:2 dest_addr = R0;
+    dest_addr = dest_addr + 2;
     R3 = R3 - 1;
-    goto inst_start;
+    goto <loopstart>;
+    <end>
+    A1 = dest_addr:2;
 }
 
 ### STC ###
